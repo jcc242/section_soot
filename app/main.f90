@@ -1,6 +1,8 @@
 program main
-  use section_soot, only: say_hello
+  use soot_params, only: read_input
+  use section_soot, only: calcCoagulation
   implicit none
 
-  call say_hello()
+  call read_input
+  call calcCoagulation()
 end program main

@@ -18,3 +18,5 @@ source-form = "free"
 [dev-dependencies]
 test-drive.git = "https://github.com/fortran-lang/test-drive"
 test-drive.tag = "v0.4.0"
+[dependencies]
+toml-f.git = "https://github.com/toml-f/toml-f"
