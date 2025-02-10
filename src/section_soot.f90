@@ -1,20 +1,21 @@
 module section_soot
   use Types, only: wp=>dp
   use soot_params
+  use collision
   implicit none
   private
 
   public :: calcCoagulation
 contains
-  subroutine calcCoagulation
+  subroutine calcCoagulation(coag_kernel)
     !! Calculates the mass based coagulation coeffcient for every two size bins.
 
     !! Geometric factor between neighboring sectional bins
-    real(wp), dimension(2,2)  :: coag_kernel
+    procedure(cvg_kernel), pointer, intent(in) :: coag_kernel
     !! Which collision function to use
-    real(wp), dimension(2,2) :: coagSnkCoefs
-    real(wp), dimension(2,2) :: coagSrcIds
-    real(wp), dimension(2,2) :: coagSrcCoefs
+    real(wp), dimension(NT, NT) :: coagSnkCoefs
+    real(wp), dimension(NT, NT) :: coagSrcIds
+    real(wp), dimension(NT, NT) :: coagSrcCoefs
     real(wp) :: beta
 
 
