@@ -1,7 +1,7 @@
 module bins
   use Types, only: wp=>dp
   use constants
-  private
+!!$  private
   real(wp) :: l_limit
   !! Left/lower limit of sectional bins
   real(wp), dimension(:), allocatable :: r_limits
@@ -15,7 +15,7 @@ module bins
   !! Conversion factor from number per bin to dN/dlog10(Dp)
   real(wp), dimension(:), allocatable :: dpBins
 
-  public :: find_bin, allocate_bins, initialize_bins
+!!$  public :: find_bin, allocate_bins, initialize_bins
 
 contains
 

@@ -24,7 +24,7 @@ contains
 
     integer :: i, j, nk, idx
 
-    if ((DIS_SECT .eq. 1) .or. (DIS_SECT .eq. 2)) then
+    if ((DIS_SECT .eq. 1) .or. (DIS_SECT .eq. 3)) then
        do i=1,ND
           do j=1,i
              ! Step one, find mass of collisions
@@ -42,7 +42,7 @@ contains
                 coagSrcCoefs(i,j) = coagSnkCoefs(i,j) + coagSnkCoefs(j,i)
              else if (idx .eq. 0) then
                 ! We are larger than the largest bin
-                if (grow_bey_bound .eq. .false.) then
+                if (grow_bey_bound .eqv. .false.) then
                    ! Dump in the largest bin
                    coagSrcIds(i,j) = NT
                    coagSrcCoefs(i,j) = coagSnkCoefs(i,j) + coagSnkCoefs(j,i)
@@ -54,6 +54,11 @@ contains
        end do
     end if ! Discrete bins
 
+!!$    if ((DIS_SECT .eq. 1) .or. (DIS_SECT .eq. 2)) then
+!!$      ! Sectional bins 
+!!$       do i=ND+1:NT
+!!$          if (i-1 .eq. ND) then
+!!$             coagSnkCoefs(1,j) = integral(coag_kernel(1,))
 
     
 

@@ -1,7 +1,7 @@
 program main
   use Types, only: wp=>dp
   use soot_params, only: read_input
-  use section_soot, only: calcCoagulation
+  use coagulation, only: calcCoagulation
   use collision, only: getKernel, cvg_kernel
   use sink, only: calcSink
   implicit none
