@@ -1,5 +1,6 @@
 module soot_params
   use Types, only: wp=>dp
+  use Bins
   implicit none
 
   !! These are all read from the input file
@@ -58,10 +59,6 @@ module soot_params
   !! If you do not want any sectional bins, set bins_per_2 to zero
   integer NT
   !! Number of total bins
-  real(wp) :: l_limit
-  !! Left/lower limit of sectional bins
-  real(wp), dimension(:), allocatable :: r_limits
-  !! Right/upper limits of sectional bins
   real(wp) :: v_mono
   !! Volume of monomer
   real(wp) :: d_mono
@@ -70,13 +67,6 @@ module soot_params
   !! Dimensionless surface tension
   real(wp) :: geo_factor
   !! Geometric scalar factor between neighbor sectional bins.
-  real(wp), dimension(:), allocatable :: s_len
-  !! Length of each bin, in number of molecules
-  real(wp), dimension(:), allocatable :: s_avg
-  !! Average particle mass in each bin, in kg
-  real(wp), dimension(:), allocatable :: convert_num_to_log
-  !! Conversion factor from number per bin to dN/dlog10(Dp)
-  real(wp), dimension(:), allocatable :: dpBins
 
 
 contains
@@ -167,44 +157,8 @@ contains
 
     geo_factor = 2**(1._wp/bins_per_2)
 
-    allocate(r_limits(NT))
-    r_limits = 0.0_wp
-    allocate(s_len(NT))
-    s_len = 0.0_wp
-    allocate(s_avg(NT))
-    s_avg = 0.0_wp
-    allocate(convert_num_to_log(NT))
-    convert_num_to_log = 0.0_wp
-
-    l_limit = 0
-
-    if ((DIS_SECT .eq. 1) .or. (DIS_SECT .eq. 3)) then
-       do i=1,ND
-          r_limits(i) = i
-          s_avg(i) = i
-          convert_num_to_log(i) = 3.0_wp/(log10((i*0.5_wp)/(i-0.5_wp)))
-       end do
-       s_len = 1.0
-       l_limit = ND+0.5 
-    end if
-     
-    if (NS .gt. 0) then
-       r_limits(ND+1) = l_limit+geo_factor
-       s_len(ND+1) = r_limits(ND+1)-l_limit
-       s_avg(ND+1) = s_len(ND+1)/(log(geo_factor))
-       convert_num_to_log(ND+1) = 3.0_wp/log10(geo_factor)
-    end if
-    if (NS .gt. 1) then
-       do i = ND + 2, NT
-          r_limits(i) = r_limits(i-1)*geo_factor
-          s_len(i) = r_limits(i)-r_limits(i-1)
-          s_avg = s_len(i)/log(geo_factor)
-          convert_num_to_log(i) = 3.0_wp/log10(geo_factor)
-       end do
-    end if
-
-    allocate(dpBins(NT))
-    dpBins = (s_avg*v_mono)**(1.0_wp/3.0_wp)*(6.0_wp/PI)**(1.0_wp/3.0_wp)
+    call allocate_bins(NT)
+    call initialize_bins(DIS_SECT, ND, NS, NT, geo_factor, v_mono)
 
   end subroutine processParams
 end module soot_params

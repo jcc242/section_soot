@@ -80,13 +80,9 @@ contains
          &- (4.0_wp*rpj**(2.0_wp)+lbj**(2.0_wp))**(1.5_wp))-2.0_wp*rpj;
     
     r_mean = (rpi+rpj)/2.0_wp;
-    beta_corr = r_mean/(r_mean + sqrt(deltai**2.0_wp + deltaj**2.0_wp)/2.0_wp) + 4.0_wp*(Di+Dj)/2.0_wp/sqrt(ci**(2.0_wp)+cj**(2.0_wp))/r_mean;
+    beta_corr = r_mean/(r_mean + sqrt(deltai**2.0_wp + deltaj**2.0_wp)/2.0_wp)&
+         & + 4.0_wp*(Di+Dj)/2.0_wp/sqrt(ci**(2.0_wp)+cj**(2.0_wp))/r_mean;
     beta = 2.0_wp*8.0_wp*PI*(rpi+rpj)/2.0_wp*(Di+Dj)/2.0_wp/beta_corr*1.0e6_wp;
   end function kernel_fuchs
-
-
-
-
-  
 
 end module collision
