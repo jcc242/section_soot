@@ -16,23 +16,76 @@ module bins
   real(wp), dimension(:), allocatable :: dpBins
 
 !!$  public :: find_bin, allocate_bins, initialize_bins
+  real(wp), dimension(:,:), allocatable :: coagSnkCoefs
+  real(wp), dimension(:,:), allocatable :: coagSrcIds
+  real(wp), dimension(:,:), allocatable :: coagSrcCoefs
 
 contains
 
   subroutine allocate_bins (NT)
     integer, intent(in) :: NT
 
-    allocate(r_limits(NT))
-    r_limits = 0.0_wp
-    allocate(s_len(NT))
-    s_len = 0.0_wp
-    allocate(s_avg(NT))
-    s_avg = 0.0_wp
-    allocate(convert_num_to_log(NT))
-    convert_num_to_log = 0.0_wp
-    allocate(dpBins(NT))
-    dpBins = 0.0_wp
+    call check_allocate_array(r_limits, NT)
+    call check_allocate_array(s_len, NT)
+    call check_allocate_array(s_avg, NT)
+    call check_allocate_array(convert_num_to_log, NT)
+    call check_allocate_array(dpBins, NT)
+    call check_allocate_matrix(coagSnkCoefs, NT, NT)
+    call check_allocate_matrix(coagSrcIds, NT, NT)
+    call check_allocate_matrix(coagSrcCoefs, NT, NT)
+!!$    if (allocated(r_limits)) then
+!!$       deallocate(r_limits)
+!!$    end if
+!!$    allocate(r_limits(NT))
+!!$    r_limits = 0.0_wp
+!!$    if (allocated(s_len)) then
+!!$       deallocate(s_len)
+!!$    end if
+!!$    allocate(s_len(NT))
+!!$    s_len = 0.0_wp
+!!$    if (allocated(s_avg)) then
+!!$       deallocate(s_avg)
+!!$    end if
+!!$    allocate(s_avg(NT))
+!!$    s_avg = 0.0_wp
+!!$    if (allocated(convert_num_to_log)) then
+!!$       deallocate(convert_num_to_log)
+!!$    end if
+!!$    allocate(convert_num_to_log(NT))
+!!$    convert_num_to_log = 0.0_wp
+!!$    if (allocated(dpBins)) then
+!!$       deallocate(dpBins)
+!!$    end if
+!!$    allocate(dpBins(NT))
+!!$    dpBins = 0.0_wp
+!!$
+!!$    if (allocated(coagSnkCoefs)) then
+!!$       deallocate(coagSnkCoefs)
+!!$    end if
+!!$    allocate(coagSnkCoefs(NT))
+!!$    coagSnkCoefs = 0.0_wp
   end subroutine allocate_bins
+
+  subroutine check_allocate_array (array_in, dim_N)
+    real(wp), dimension(:), allocatable, intent(out) :: array_in
+    integer :: dim_N
+    if (allocated(array_in)) then
+       deallocate(array_in)
+    end if
+    allocate(array_in(dim_N))
+    array_in = 0.0_wp
+  end subroutine check_allocate_array
+
+  subroutine check_allocate_matrix (matrix_in, dim_N, dim_M)
+    real(wp), dimension(:,:), allocatable, intent(out) :: matrix_in
+    integer :: dim_N, dim_M
+    if (allocated(matrix_in)) then
+       deallocate(matrix_in)
+    end if
+    allocate(matrix_in(dim_N, dim_M))
+    matrix_in = 0.0_wp
+  end subroutine check_allocate_matrix
+
 
   subroutine initialize_bins (DIS_SECT, ND, NS, NT, geo_factor, v_mono)
     integer, intent(in) :: DIS_SECT, ND, NS, NT

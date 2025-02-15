@@ -6,7 +6,7 @@ module Constants
   real(wp), parameter :: TREF = 300
   real(wp), parameter :: MFPREF = 67.0e-9_wp
   real(wp), parameter :: PREF = 101325.0_wp
-  real(wp), parameter :: MUREF = 1.8e-5_wp
+  real(wp), parameter :: MUREF = 1.82e-5_wp
 
 contains
 

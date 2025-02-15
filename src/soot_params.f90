@@ -71,13 +71,14 @@ module soot_params
 
 contains
 
-  subroutine read_input
+  subroutine read_file(filename)
     use tomlf, only: toml_table, toml_parse, toml_error
     
+    character(*), intent(in) :: filename
     type(toml_table), allocatable :: table
     integer :: io
     type(toml_error), allocatable :: error
-    open(file="params.toml", newunit=io, status="old")
+    open(file=filename, newunit=io, status="old")
     call toml_parse(table, io, error)
     close(io)
     if (allocated(error)) then
@@ -86,7 +87,7 @@ contains
     end if
 
     call init(table)
-  end subroutine read_input
+  end subroutine read_file
 
 
   subroutine init(table)

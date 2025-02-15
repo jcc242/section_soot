@@ -2,33 +2,37 @@ module coagulation
   use Types, only: wp=>dp
   use soot_params
   use collision
-  use bins
+!!$  use bins
+  use quadrature, only: integral, quad_fun
   implicit none
   private
 
   public :: calcCoagulation
 
+  procedure(cvg_kernel), pointer :: m_coag_kernel
+
 contains
 
-  subroutine calcCoagulation(coag_kernel)
+  subroutine calcCoagulation(coag_kernel, coagSnkCoefs, coagSrcIds, coagSrcCoefs)
     !! Calculates the mass based coagulation coeffcient for every two size bins.
 
     !! Geometric factor between neighboring sectional bins
     procedure(cvg_kernel), pointer, intent(in) :: coag_kernel
     !! Which collision function to use
-    real(wp), dimension(NT, NT) :: coagSnkCoefs
-    real(wp), dimension(NT, NT) :: coagSrcIds
-    real(wp), dimension(NT, NT) :: coagSrcCoefs
+    real(wp), dimension(NT, NT), intent(out) :: coagSnkCoefs
+    real(wp), dimension(NT, NT), intent(out) :: coagSrcIds
+    real(wp), dimension(NT, NT), intent(out) :: coagSrcCoefs
     real(wp) :: beta
 
-
     integer :: i, j, nk, idx
+
+    m_coag_kernel=>coag_kernel
 
     if ((DIS_SECT .eq. 1) .or. (DIS_SECT .eq. 3)) then
        do i=1,ND
           do j=1,i
              ! Step one, find mass of collisions
-             beta = coag_kernel(i,j)
+             beta = coag_kernel(real(i, kind = 8),real(j, kind = 8))
              coagSnkCoefs(i,j) = beta/j
              coagSnkCoefs(j,i) = beta/i
 
@@ -60,7 +64,12 @@ contains
 !!$          if (i-1 .eq. ND) then
 !!$             coagSnkCoefs(1,j) = integral(coag_kernel(1,))
 
-    
-
   end subroutine calcCoagulation
+
+  function igral1 (x) result(val)
+    real(wp) :: val
+    real(wp), intent(in) :: x
+    val = m_coag_kernel(1.0_wp,x)/x
+  end function igral1
+
 end module coagulation
